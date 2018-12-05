@@ -1,11 +1,20 @@
 FROM fedora:28
 ENV container=docker
 
-RUN dnf -y update && dnf clean all
+RUN dnf makecache && dnf -y update && dnf clean all
 
 COPY ansible.repo /etc/yum.repos.d/ansible.repo
 
-RUN dnf -y install systemd ansible sudo which python2-dnf && dnf clean all && \
+RUN dnf makecache \
+    && dnf -y install \
+    ansible \
+    bash \
+    systemd \
+    sudo \
+    which \
+    python \
+    python2-dnf \
+    && dnf clean all && \
   (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
   rm -f /lib/systemd/system/multi-user.target.wants/*;\
   rm -f /etc/systemd/system/*.wants/*;\
