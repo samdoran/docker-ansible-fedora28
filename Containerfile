@@ -4,8 +4,6 @@ ENV CONTAINER=docker
 
 RUN dnf makecache && dnf -y update && dnf clean all
 
-COPY ansible.repo /etc/yum.repos.d/ansible.repo
-
 RUN dnf -y install systemd && dnf clean all && \
   (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
   rm -f /lib/systemd/system/multi-user.target.wants/*;\
@@ -17,7 +15,6 @@ RUN dnf -y install systemd && dnf clean all && \
   rm -f /lib/systemd/system/anaconda.target.wants/*;
 
 RUN dnf makecache && dnf -y install \
-    ansible \
     bash \
     sudo \
     which \
@@ -25,6 +22,8 @@ RUN dnf makecache && dnf -y install \
     python2-dnf \
     python2-pip \
     && dnf clean all
+
+RUN pip install ansible q
 
 RUN sed -i -e 's/^\(Defaults\s*requiretty\)/#--- \1/'  /etc/sudoers
 
