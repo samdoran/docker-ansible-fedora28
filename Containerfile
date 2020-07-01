@@ -27,7 +27,8 @@ RUN pip install ansible q
 
 RUN sed -i -e 's/^\(Defaults\s*requiretty\)/#--- \1/'  /etc/sudoers
 
-RUN echo -e "localhost ansible_connection=local ansible_python_interpreter=/usr/bin/python" > /etc/ansible/hosts
+RUN mkdir -p /etc/ansible && \
+    echo -e "localhost ansible_connection=local ansible_python_interpreter=/usr/bin/python" > /etc/ansible/hosts
 
 VOLUME ["/sys/fs/cgroup", "/tmp", "/run"]
 CMD ["/usr/sbin/init"]
